@@ -1,0 +1,16 @@
+testbed:
+  name: alwaysonsbxs
+  credentials: 
+    default:
+      username: "admin"
+      password: "ipcafe"
+      enable: "ipcafe"
+
+devices:
+    csr1000v-1:
+        type: router
+        os: iosxe
+        connections:
+            ssh:
+                protocol: ssh
+                ip: 192.168.1.242
