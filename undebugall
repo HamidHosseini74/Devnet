@@ -1,0 +1,50 @@
+
+from genie.testbed import load
+from genie.conf import Genie
+from genie.libs.conf.interface import Interface
+import yaml
+import paramiko
+import time
+from netmiko import ConnectHandler
+
+isactiveuser = False
+device_users_details = {}
+
+
+def undebugall(Device):
+    with open("testbed.yaml") as f:
+        read_yaml = yaml.load(f)
+    ip = read_yaml["devices"][Device]["connections"]["ssh"]["ip"]
+    iosv_l2 = {
+        'device_type': 'cisco_ios',
+        'ip': ip,
+        'username': 'admin',
+        'password': 'ipcafe',
+    }
+
+    net_connect = ConnectHandler(**iosv_l2)
+    output = net_connect.send_command('undebug all')
+
+
+#########################################################################################
+def main():
+    isactiveuser = False
+    testbed = Genie.init("testbed.yaml")
+    for device in testbed.devices:
+        testbed.devices[device].connect()
+        interface_details = testbed.devices[device].parse("show users")
+        device_users_details[device] = interface_details
+
+    for Device, users in device_users_details.items():
+        for linevty in users['line']:
+            if linevty[0] == "2":
+                isactiveuser = True
+        if isactiveuser == True:
+            print("Found Active Users on  " + Device + "  and Undebugall")
+            undebugall(Device)
+        else:
+            print("NO Active User on " + Device)
+
+
+if __name__ == "__main__":
+    main()
