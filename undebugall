@@ -1,9 +1,6 @@
-
-from genie.testbed import load
 from genie.conf import Genie
 from genie.libs.conf.interface import Interface
 import yaml
-import paramiko
 import time
 from netmiko import ConnectHandler
 
