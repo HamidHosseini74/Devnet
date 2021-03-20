@@ -10,7 +10,7 @@ from netmiko import ConnectHandler
 isactiveuser = False
 device_users_details = {}
 
-
+#########################################################################################
 def undebugall(Device):
     with open("testbed.yaml") as f:
         read_yaml = yaml.load(f)
@@ -32,8 +32,8 @@ def main():
     testbed = Genie.init("testbed.yaml")
     for device in testbed.devices:
         testbed.devices[device].connect()
-        interface_details = testbed.devices[device].parse("show users")
-        device_users_details[device] = interface_details
+        users_details = testbed.devices[device].parse("show users")
+        device_users_details[device] = users_details
 
     for Device, users in device_users_details.items():
         for linevty in users['line']:
